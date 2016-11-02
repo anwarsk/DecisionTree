@@ -22,26 +22,38 @@ class InputHandler:
         return numberString
 
 
-    def readFile(self, inputFile, labelIndex, featureIndices):
+    def readFile(self, inputFile, labelIndex, featureIndices, fileType="text", ignoreHeader=False):
         """
         This function reads the input file to the program and generate the data matrix for the program.
 
         :param inputFile: path to input file
         :param labelIndex: index of class label column in the data
         :param featureIndices: indices of the feature columns in the data
+        :param fileType: type of file to read (text/csv)
+        :param ignoreHeader: ignores first line of file if set to True
         :return: data matrix with in format [[feature1, feature2, .., classlabel],..]
         """
         if os.path.isfile(inputFile) == False:
             print('Invalid file path')
             return 0
         else:
-            file = open(inputFile, 'r')
-            lines = file.readlines()
-            featureMatrix = []
-            for line in lines:
-                lineData = [ self.convertToInteger(x) for x in line.rstrip('\n').split(' ')]
-                label = lineData[labelIndex]
-                features = lineData[featureIndices[0]:featureIndices[1]]
-                features.append(label)
-                featureMatrix.append(features)
+            with open(inputFile) as f:
+                # ignore header if set to true
+                if ignoreHeader:
+                    next(f)
+
+                featureMatrix = []
+                for line in f:
+                    lineData = [ self.convertToInteger(x) for x in line.rstrip('\n').split(self.getSplitChar(fileType))]
+                    label = lineData[labelIndex]
+                    features = lineData[featureIndices[0]:featureIndices[1]]
+                    features.append(label)
+                    featureMatrix.append(features)
             return featureMatrix
+
+
+    def getSplitChar(self, fileType):
+        if fileType == "csv":
+            return ','
+        else:
+            return ' '
