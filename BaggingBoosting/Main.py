@@ -1,6 +1,6 @@
-from DecisionTree.InputHandler import InputHandler
-from BaggingBoosting import Constants
-from BaggingBoosting.EnsembleUtil import EnsembleUtil
+from DecisionTree.DecisionTree.InputHandler import InputHandler
+from DecisionTree.BaggingBoosting import Constants
+from DecisionTree.BaggingBoosting.EnsembleUtil import EnsembleUtil
 
 from pprint import pprint
 

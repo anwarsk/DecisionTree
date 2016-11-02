@@ -3,8 +3,8 @@ import uuid
 import pydot
 
 # imports for computation
-import Constants
-import DataAnalyser
+import DecisionTree.DecisionTree.Constants
+import DecisionTree.DecisionTree.DataAnalyser
 
 
 class DecisionTree:

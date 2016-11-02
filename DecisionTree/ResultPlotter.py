@@ -3,7 +3,7 @@ Matplotlib and Pandas are used the draw the accuracy vs tree-depth plots.
 """
 import matplotlib.pyplot as plt
 import pandas as pd
-import Constants
+from DecisionTree.DecisionTree import Constants
 
 def plotResults():
     """
