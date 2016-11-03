@@ -8,7 +8,7 @@ class EnsembleUtil:
         sample_size = len(trainingSet)
 
         for index in range(numBags):
-            print("Creating sample bag #" + str(index))
+            print("Creating bootstrap sample #" + str(index))
             bootstrap_samples.append(
                 [random.choice(trainingSet) for _ in range(sample_size)]
             )

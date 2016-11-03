@@ -10,11 +10,8 @@ RESULT_FILE = "dt_accuracies.csv"
 # Index of the class label in monk data
 LABEL_INDEX = 20
 
-# Indices of features in the monk data
-FEATURE_INDICES = (0,20)
-
 # Desired max depth of the tree
 TREE_DEPTH = 3
 
 # Desired number of sample bags
-NUMBER_OF_BAGS = 2
+NUMBER_OF_BAGS = 5

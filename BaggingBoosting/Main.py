@@ -1,6 +1,6 @@
 from DecisionTree.DecisionTree.InputHandler import InputHandler
 from DecisionTree.BaggingBoosting import Constants
-from DecisionTree.BaggingBoosting.EnsembleUtil import EnsembleUtil
+from DecisionTree.BaggingBoosting.BaggingLearner import BaggingLearner
 
 from pprint import pprint
 
@@ -9,18 +9,19 @@ class Main:
 
     def run(self):
         inputHandler = InputHandler()
-        ensembleUtil = EnsembleUtil()
 
         # create data matrix from training file
         matrix_train = inputHandler.readFile(Constants.INPUT_FILE_NAME,
                                              Constants.LABEL_INDEX,
-                                             Constants.FEATURE_INDICES,
                                              fileType="csv",
                                              ignoreHeader=True)
-        pprint(matrix_train)
+        print("Number of training examples: " + str(matrix_train.__len__()))
 
-        bootstrap_matrix = ensembleUtil.createBootstrapSamples(matrix_train, Constants.NUMBER_OF_BAGS)
-        pprint(bootstrap_matrix)
+        bagging_learner = BaggingLearner(training_data=matrix_train,
+                                         num_bags=Constants.NUMBER_OF_BAGS)
+
+        bagging_learner.learn(Constants.TREE_DEPTH)
+
 
 # run main function
 if __name__ == '__main__':

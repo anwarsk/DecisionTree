@@ -3,8 +3,7 @@ import uuid
 import pydot
 
 # imports for computation
-import DecisionTree.DecisionTree.Constants
-import DecisionTree.DecisionTree.DataAnalyser
+from DecisionTree.DecisionTree.DataAnalyser import DataAnalyser
 
 
 class DecisionTree:
@@ -38,7 +37,7 @@ class DecisionTree:
         :param negativeCount: total negative values in the data
         :return:
         """
-        dataAnalyser = DataAnalyser.DataAnalyser()
+        dataAnalyser = DataAnalyser()
         # print("\nNode Data--")
         # print("Subset Indices: ", subsetIndices)
         # print("Available Features: ", availableFeatures)

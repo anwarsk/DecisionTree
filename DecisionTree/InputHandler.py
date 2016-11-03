@@ -22,7 +22,7 @@ class InputHandler:
         return numberString
 
 
-    def readFile(self, inputFile, labelIndex, featureIndices, fileType="text", ignoreHeader=False):
+    def readFile(self, inputFile, labelIndex, featureIndices=None, fileType="text", ignoreHeader=False):
         """
         This function reads the input file to the program and generate the data matrix for the program.
 
@@ -46,7 +46,10 @@ class InputHandler:
                 for line in f:
                     lineData = [ self.convertToInteger(x) for x in line.rstrip('\n').split(self.getSplitChar(fileType))]
                     label = lineData[labelIndex]
-                    features = lineData[featureIndices[0]:featureIndices[1]]
+                    if featureIndices is not None:
+                        features = lineData[featureIndices[0]:featureIndices[1]]
+                    else:
+                        features = [x for i,x in enumerate(lineData) if i!=labelIndex and i!=labelIndex+1]  # for mushroom dataset, ignore 'bruises?-no' feature as well
                     features.append(label)
                     featureMatrix.append(features)
             return featureMatrix
