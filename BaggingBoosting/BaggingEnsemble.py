@@ -6,12 +6,19 @@ from pprint import pprint
 
 
 class BaggingEnsemble:
-
+    """
+    This class contains core implementation for Bagging ensemble learner.
+    """
     # text formatting settings
     BOLD = '\033[1m'
     END = '\033[0m'
 
     def __init__(self, training_data, num_bags):
+        """
+        Constructor for this class
+        :param training_data: the training data
+        :param num_bags: number of bootstrapped bags
+        """
         self.__training_data = training_data
         self.__num_bags = num_bags
         self.__bootstrap_samples = []
@@ -20,6 +27,11 @@ class BaggingEnsemble:
 
 
     def learn(self, tree_depth):
+        """
+        This functions learns 'self.__num_bags' decision-trees of 'tree_depth' height each.
+        :param tree_depth: depth of DT
+        :return:
+        """
         ensembleUtil = EnsembleUtil()
 
         # get bootstrap samples
@@ -45,6 +57,12 @@ class BaggingEnsemble:
 
 
     def predict(self, testing_data):
+        """
+        This function predicts the class labels for the testing data set
+        using majority voting
+        :param testing_data: the testing data set
+        :return: predicted class labels
+        """
         ensembleUtil = EnsembleUtil()
 
         # predict using each DT model

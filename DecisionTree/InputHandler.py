@@ -56,6 +56,12 @@ class InputHandler:
 
 
     def getSplitChar(self, fileType):
+        """
+        This function returns either a comma (,) or a space ( )
+        which is used as a split character based on file-type
+        :param fileType:
+        :return:
+        """
         if fileType == "csv":
             return ','
         else:
