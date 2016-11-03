@@ -79,4 +79,5 @@ class BaggingEnsemble:
             )
 
         #print(self.__predicted_classes_collection)
+        print("\n" + BaggingEnsemble.BOLD + "TASK: Select final class labels using majority voting" + BaggingEnsemble.END)
         return ensembleUtil.get_majority_voted_labels(self.__predicted_classes_collection)
