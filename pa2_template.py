@@ -21,6 +21,7 @@ from DecisionTree.BaggingBoosting.Main import Main
 
 import sys, os;
 
+
 '''
 Function: load_and_split_data(datapath)
 datapath: (String) the location of the UCI mushroom data set directory in memory
@@ -96,7 +97,16 @@ Nothing is returned, but the accuracy of the learned ensemble model is printed
 to the screen.
 '''
 def learn_boosted(tdepth, numtrees, datapath):
-    pass;
+    train_data, test_data = load_data(datapath)
+
+    ensemble_main = Main(matrix_train=train_data,
+                         matrix_test=test_data,
+                         tree_depth=tdepth,
+                         num_bags=numtrees)
+
+    # run the bagging algorithm
+    ensemble_main.run_boosting()
+    return;
 
 
 '''
