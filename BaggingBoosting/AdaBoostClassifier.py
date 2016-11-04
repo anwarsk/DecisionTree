@@ -1,6 +1,3 @@
-from reportlab.lib.utils import _FmtSelfDict
-
-from DecisionTree.BaggingBoosting.EnsembleUtil  import EnsembleUtil
 from DecisionTree.DecisionTree.Data import Data
 from DecisionTree.DecisionTree.WeightedDecisionTree import WeightedDecisionTree
 import math
@@ -95,9 +92,9 @@ class AdaBoostClassifier:
             predicted_labels = model.test(testing_data)
             for index, predicted_label in enumerate(predicted_labels):
                 if predicted_label == 0:
-                    cumulative_predicted_labels[index] -= abs(model_weight)
+                    cumulative_predicted_labels[index] -= model_weight
                 else:
-                    cumulative_predicted_labels[index] += abs(model_weight)
+                    cumulative_predicted_labels[index] += model_weight
 
         for index in range(0, len(cumulative_predicted_labels)):
             if cumulative_predicted_labels[index] < 0:
