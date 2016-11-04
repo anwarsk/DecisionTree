@@ -1,6 +1,6 @@
 from DecisionTree.BaggingBoosting.EnsembleUtil  import EnsembleUtil
 from DecisionTree.DecisionTree.Data import Data
-from DecisionTree.DecisionTree import DecisionTree
+from DecisionTree.DecisionTree.DecisionTree import DecisionTree
 
 from pprint import pprint
 import copy
@@ -9,9 +9,6 @@ class BaggingEnsemble:
     """
     This class contains core implementation for Bagging ensemble learner.
     """
-    # text formatting settings
-    BOLD = '\033[1m'
-    END = '\033[0m'
 
     def __init__(self, training_data, num_bags):
         """
@@ -35,14 +32,14 @@ class BaggingEnsemble:
         ensembleUtil = EnsembleUtil()
 
         # get bootstrap samples
-        print("\n" + BaggingEnsemble.BOLD + "TASK: Create Bootstrap Samples from Training Data" + BaggingEnsemble.END)
+        print("\nTASK: Creating Bootstrap Samples from Training Data")
         self.__bootstrap_samples = ensembleUtil.createBootstrapSamples(self.__training_data,
                                                                        self.__num_bags)
 
-        print("\n" + BaggingEnsemble.BOLD + "TASK: Learn Decision Tree for each Bootstrap Sample" + BaggingEnsemble.END)
+        print("\nTASK: Learning Decision Tree for each Bootstrap Sample")
         # for each bootstrap sample, learn a DT
         for count, bootstrap_sample in enumerate(self.__bootstrap_samples):
-            print("Learning DT for bootstrapped sample #" + str(count))
+            # print("Learning DT for bootstrapped sample #" + str(count))
             data_train = Data()
             decision_tree = DecisionTree()
 
@@ -68,18 +65,18 @@ class BaggingEnsemble:
         ensembleUtil = EnsembleUtil()
 
         # predict using each DT model
-        print("\n" + BaggingEnsemble.BOLD + "TASK: Get predicted class label by each learned DT model" + BaggingEnsemble.END)
+        print("\nTASK: Getting predicted class label by each learned DT model")
 
         # create test data matrix
         data_test = Data()
         data_test.setMatrix(testing_data)
 
         for count, dt_model in enumerate(self.__learned_models):
-            print("Predicting class labels with DT model #" + str(count))
+            # print("Predicting class labels with DT model #" + str(count))
             self.__predicted_classes_collection.append(
                 dt_model.test(data_test.getMatrix())
             )
 
         #print(self.__predicted_classes_collection)
-        print("\n" + BaggingEnsemble.BOLD + "TASK: Select final class labels using majority voting" + BaggingEnsemble.END)
+        print("\nTASK: Selecting final class labels using majority voting")
         return ensembleUtil.get_majority_voted_labels(self.__predicted_classes_collection)

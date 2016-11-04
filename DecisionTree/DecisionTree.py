@@ -254,7 +254,7 @@ class DecisionTree:
         print('Saving decision tree visualization in dt_plots folder!')
         self.__graph = pydot.Dot(graph_type='graph')
         self.__rootNode.drawNode(graph=self.__graph)
-        self.__graph.write_png('dt-plots/' + op_file + '-depth-' + str(self.__treeDepth) + '.png')
+        self.__graph.write_png('/Users/goshenoy/dt-plots/' + op_file + '-depth-' + str(self.__treeDepth) + '.png')
 
 
 class Node:
