@@ -27,7 +27,8 @@ class WeightedDecisionTree:
         self.__treeDepth = treeDepth
         self.__rootNode = self.createNode(data, weights, indices, availableFeatures, 0)
 
-    def createNode(self, data, weights, subsetIndices, availableFeatures, nodeDepth, positiveCount=-1, negativeCount=-1):
+    def createNode(self, data, weights, subsetIndices, availableFeatures, nodeDepth,
+                   positiveCount=-1, negativeCount=-1, positiveWeightSum = 0, negativeWeightSum = 0):
         """
         Creates a node in the tree and returns the node object
         :param data: data object
@@ -48,7 +49,7 @@ class WeightedDecisionTree:
             # Creating a pure class leaf node and return
             positiveRatio = positiveCount / (positiveCount + negativeCount)
             negativeRatio = negativeCount / (negativeCount + positiveCount)
-            node = Node(-1, positiveRatio, negativeRatio, nodeDepth)
+            node = Node(-1, positiveRatio, negativeRatio, nodeDepth, positiveWeightSum, negativeWeightSum)
             return node
 
         # If node is not pure get the feature breakdown from analyzer
@@ -67,15 +68,22 @@ class WeightedDecisionTree:
         if (positiveCount == -1 or negativeCount == -1):
             negativeCount = 0
             positiveCount = 0
+            negativeWeightSum = 0
+            positiveWeightSum = 0
             for featureValue in featureValues:
                 negativeCount += featureBreakDown.negativeCount[featureValue]
                 positiveCount += featureBreakDown.positiveCount[featureValue]
+                negativeWeightSum += featureBreakDown.negativeWeights[featureValue]
+                positiveWeightSum += featureBreakDown.postiveWeights[featureValue]
 
         positiveRatio = float(positiveCount) / (positiveCount + negativeCount)
         negativeRatio = float(negativeCount) / (negativeCount + positiveCount)
 
         # Create a new node
-        node = Node(feature, positiveRatio, negativeRatio, nodeDepth)
+        node = Node(feature,
+                    positiveRatio, negativeRatio,
+                    nodeDepth,
+                    positiveWeightSum, negativeWeightSum)
 
         # Create branches and child nodes for each possible value feature can take
         childrenAvailableFeatures = list(availableFeatures)
@@ -87,7 +95,9 @@ class WeightedDecisionTree:
                 childNode = self.createNode(data, weights, childSubsetIndices,
                                             childrenAvailableFeatures, childrenNodeDepth,
                                             featureBreakDown.positiveCount[featureValue],
-                                            featureBreakDown.negativeCount[featureValue])
+                                            featureBreakDown.negativeCount[featureValue],
+                                            featureBreakDown.postiveWeights[featureValue],
+                                            featureBreakDown.negativeWeights[featureValue])
                 node.addChildren(featureValue, childNode)
 
         return node
@@ -270,12 +280,18 @@ class Node:
     __positiveRatio = 0
     __negativeRatio = 0
     __nodeDepth = -1
+    __positiveWeightSum = 0
+    __negativeWeightSum = 0
 
-    def __init__(self, feature, positiveRatio, negativeRatio, nodeDepth):
+
+    def __init__(self, feature, positiveRatio, negativeRatio,
+                 nodeDepth, positiveWeightSum, negativeWeightSum):
         self.__featureIndex = feature
         self.__positiveRatio = positiveRatio
         self.__negativeRatio = negativeRatio
         self.__nodeDepth = nodeDepth
+        self.__positiveWeightSum = positiveWeightSum
+        self.__negativeWeightSum = negativeWeightSum
         self.__children = -1
 
     def addChildren(self, featureValue, childNode):

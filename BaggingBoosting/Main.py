@@ -85,21 +85,20 @@ class Main:
 
         ensemble_util = EnsembleUtil()
 
-        # initialize bagging ensemble
+        # initialize boosting ensemble
         adaBoost_ensemble = AdaBoostClassifier(training_data=self.__matrix_train,
                                                tree_depth=self.__tree_depth,
                                                iteration_count=self.__num_bags)
 
-        # learn the bagging ensemble
+        # learn the boosting ensemble
         adaBoost_ensemble.learn();
 
-        self.__matrix_test = self.__matrix_train
-        # predict using bagging
+        # predict using boosting
         predicted_classes = adaBoost_ensemble.test(testing_data=self.__matrix_test)
         # print(predicted_classes)
 
         # print accuracy & misclassification count
-        print("\n" + Main.BOLD + "TASK: Print Bagging accuracy & mis-classification count" + Main.END)
+        print("\n" + Main.BOLD + "TASK: Print AdaBoost accuracy & mis-classification count" + Main.END)
         ensemble_util.calculate_accuracy(testing_data=self.__matrix_test,
                                          predicted_classes=predicted_classes)
 
