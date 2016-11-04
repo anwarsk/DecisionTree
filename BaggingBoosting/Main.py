@@ -9,9 +9,6 @@ class Main:
     """
     Main class with implementation logic interfaces for Bagging & Boosting
     """
-    # text formatting settings
-    BOLD = '\033[1m'
-    END = '\033[0m'
 
     def __init__(self, matrix_train, matrix_test, tree_depth, num_bags):
         """
@@ -70,12 +67,12 @@ class Main:
         # print(predicted_classes)
 
         # print accuracy & misclassification count
-        print("\n" + Main.BOLD + "TASK: Print Bagging accuracy & mis-classification count" + Main.END)
+        print("\nTASK: Printing Bagging accuracy & mis-classification count")
         ensemble_util.calculate_accuracy(testing_data=self.__matrix_test,
                                          predicted_classes=predicted_classes)
 
         # print confusion matrix
-        print("\n" + Main.BOLD + "TASK: Print Confusion Matrix" + Main.END)
+        print("\nTASK: Printing Confusion Matrix")
         ensemble_util.print_confusion_matrix(testing_data=self.__matrix_test,
                                              predicted_classes=predicted_classes)
 
@@ -98,12 +95,12 @@ class Main:
         # print(predicted_classes)
 
         # print accuracy & misclassification count
-        print("\n" + Main.BOLD + "TASK: Print AdaBoost accuracy & mis-classification count" + Main.END)
+        print("\nTASK: Print AdaBoost accuracy & mis-classification count")
         ensemble_util.calculate_accuracy(testing_data=self.__matrix_test,
                                          predicted_classes=predicted_classes)
 
         # print confusion matrix
-        print("\n" + Main.BOLD + "TASK: Print Confusion Matrix" + Main.END)
+        print("\nTASK: Print Confusion Matrix")
         ensemble_util.print_confusion_matrix(testing_data=self.__matrix_test,
                                              predicted_classes=predicted_classes)
 

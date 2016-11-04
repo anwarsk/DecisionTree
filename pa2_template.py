@@ -13,7 +13,7 @@ For building your bags numpy's random module will be helpful.
 '''
 
 # This is the only non-native library to python you need
-#import numpy as np;
+# import numpy as np;
 
 from DecisionTree.DecisionTree.InputHandler import InputHandler
 from DecisionTree.BaggingBoosting import Constants
@@ -21,6 +21,9 @@ from DecisionTree.BaggingBoosting.Main import Main
 
 import sys, os;
 
+# text formatting settings
+BOLD = '\033[1m'
+END = '\033[0m'
 
 '''
 Function: load_and_split_data(datapath)
@@ -36,6 +39,8 @@ value is treated as its own attribute value.
 Two nested lists are returned. The first list represents the training set and
 the second list represents the test set.
 '''
+
+
 def load_data(datapath):
     inputHandler = InputHandler()
 
@@ -57,6 +62,7 @@ def load_data(datapath):
     # return train & test set
     return matrix_train, matrix_test
 
+
 '''
 Function: learn_bagged(tdepth, numbags, datapath)
 tdepth: (Integer) depths to which to grow the decision trees
@@ -68,8 +74,19 @@ This function will manage coordinating the learning of the bagged ensemble.
 Nothing is returned, but the accuracy of the learned ensemble model is printed
 to the screen.
 '''
-def learn_bagged(tdepth, numbags, datapath):
 
+
+def learn_bagged(tdepth, numbags, datapath):
+    print(BOLD + '{0:{fill}{align}{width}} '.format('=',
+                                                    fill='=',
+                                                    width=65,
+                                                    align='^') + END)
+    print(BOLD + "BAGGING , CONFIGURATION : DEPTH = {}, NUM-BAGS = {}".format(tdepth,
+                                                                              numbags) + END)
+    print(BOLD + '{0:{fill}{align}{width}} '.format('=',
+                                                    fill='=',
+                                                    width=65,
+                                                    align='^') + END)
     # get the train,test data sets
     train_data, test_data = load_data(datapath)
 
@@ -82,7 +99,7 @@ def learn_bagged(tdepth, numbags, datapath):
 
     # run the bagging algorithm
     ensemble_main.run_bagging()
-    return ;
+    return;
 
 
 '''
@@ -96,7 +113,20 @@ This function wil manage coordinating the learning of the boosted ensemble.
 Nothing is returned, but the accuracy of the learned ensemble model is printed
 to the screen.
 '''
+
+
 def learn_boosted(tdepth, numtrees, datapath):
+    print(BOLD + '{0:{fill}{align}{width}} '.format('=',
+                                                    fill='=',
+                                                    width=65,
+                                                    align='^') + END)
+    print(BOLD + "ADABOOST , CONFIGURATION : DEPTH = {}, NUM-TREES = {}".format(tdepth,
+                                                                               numtrees) + END)
+    print(BOLD + '{0:{fill}{align}{width}} '.format('=',
+                                                    fill='=',
+                                                    width=65,
+                                                    align='^') + END)
+    # get the train,test data sets
     train_data, test_data = load_data(datapath)
 
     ensemble_main = Main(matrix_train=train_data,
@@ -116,6 +146,8 @@ This function returns the name of the training data file
 named agaricuslepiotatrain1.csv, which is located in the
 mushrooms directory in memory
 '''
+
+
 def get_train_filename():
     return 'agaricuslepiotatrain1.csv'
 
@@ -127,6 +159,8 @@ This function returns the name of the testing data file
 named agaricuslepiotatest1.csv, which is located in the
 mushrooms directory in memory
 '''
+
+
 def get_test_filename():
     return 'agaricuslepiotatest1.csv'
 
