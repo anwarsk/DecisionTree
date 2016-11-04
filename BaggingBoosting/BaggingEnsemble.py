@@ -3,7 +3,7 @@ from DecisionTree.DecisionTree.Data import Data
 from DecisionTree.DecisionTree.DecisionTree import DecisionTree
 
 from pprint import pprint
-
+import copy
 
 class BaggingEnsemble:
     """
@@ -51,8 +51,10 @@ class BaggingEnsemble:
             decision_tree.train(data=data_train,
                                 treeDepth=tree_depth)
 
+            # decision_tree.printTree('bagging-' + str(count))
+
             # save the learned model
-            self.__learned_models.append(decision_tree)
+            self.__learned_models.append(copy.deepcopy(decision_tree))
         return
 
 

@@ -1,6 +1,7 @@
 # imports used for drawing DT (Optional)
 import uuid
 import pydot
+import random
 
 # imports for computation
 from DecisionTree.DecisionTree.DataAnalyser import DataAnalyser
@@ -298,8 +299,10 @@ class Node:
     def getClassLabel(self):
         if self.__positiveRatio > self.__negativeRatio:
             return 1
-        else:
+        elif self.__positiveRatio < self.__negativeRatio:
             return 0
+        else:
+            return random.choice((1,0))
 
     def printNode(self):
         print("\n\nNode Feature:", self.getFeatureIndex(), "| ClassLabel:", self.getClassLabel())
