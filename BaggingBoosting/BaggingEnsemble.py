@@ -1,6 +1,6 @@
-from DecisionTree.BaggingBoosting.EnsembleUtil import EnsembleUtil
+from DecisionTree.BaggingBoosting.EnsembleUtil  import EnsembleUtil
 from DecisionTree.DecisionTree.Data import Data
-from DecisionTree.DecisionTree.DecisionTree import DecisionTree
+from DecisionTree.DecisionTree import DecisionTree
 
 from pprint import pprint
 

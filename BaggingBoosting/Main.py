@@ -3,6 +3,7 @@ from DecisionTree.BaggingBoosting.EnsembleUtil import EnsembleUtil
 
 from pprint import pprint
 
+from DecisionTree.BaggingBoosting.AdaBoostClassifier import AdaBoostClassifier
 
 class Main:
     """
@@ -79,6 +80,33 @@ class Main:
                                              predicted_classes=predicted_classes)
 
         return
+
+    def run_boosting(self):
+
+        ensemble_util = EnsembleUtil()
+
+        # initialize bagging ensemble
+        adaBoost_ensemble = AdaBoostClassifier(training_data=self.__matrix_train,
+                                               tree_depth=self.__tree_depth,
+                                               iteration_count=self.__num_bags)
+
+        # learn the bagging ensemble
+        adaBoost_ensemble.learn();
+
+        self.__matrix_test = self.__matrix_train
+        # predict using bagging
+        predicted_classes = adaBoost_ensemble.test(testing_data=self.__matrix_test)
+        # print(predicted_classes)
+
+        # print accuracy & misclassification count
+        print("\n" + Main.BOLD + "TASK: Print Bagging accuracy & mis-classification count" + Main.END)
+        ensemble_util.calculate_accuracy(testing_data=self.__matrix_test,
+                                         predicted_classes=predicted_classes)
+
+        # print confusion matrix
+        print("\n" + Main.BOLD + "TASK: Print Confusion Matrix" + Main.END)
+        ensemble_util.print_confusion_matrix(testing_data=self.__matrix_test,
+                                             predicted_classes=predicted_classes)
 
 
 # run main function
