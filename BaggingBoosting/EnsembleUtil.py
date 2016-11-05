@@ -1,5 +1,4 @@
 import random
-from DecisionTree.DecisionTree.Data import Data
 from DecisionTree.DecisionTree.DecisionTree import DecisionTree
 
 
@@ -73,7 +72,7 @@ class EnsembleUtil:
         dt_accuracy, dt_misclassification = decision_tree.calculateAccuracy(testing_data,
                                                                             predicted_classes)
 
-        print('Accuracy of ensemble method = {}%'.format(dt_accuracy))
+        print('Accuracy of ensemble method = {}%'.format(round(dt_accuracy, 3)))
         print('Misclassification Count = {}'.format(dt_misclassification))
         return
 
