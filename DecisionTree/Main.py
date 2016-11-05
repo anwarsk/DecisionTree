@@ -1,9 +1,9 @@
 import os
-import Data
-import Constants
-import InputHandler
-import DecisionTree
-import ResultPlotter
+from DecisionTree.DecisionTree import Data
+import DecisionTree.DecisionTree.Constants as Constants
+from DecisionTree.DecisionTree import InputHandler
+from DecisionTree.DecisionTree import DecisionTree
+import DecisionTree.DecisionTree.ResultPlotter as ResultPlotter
 
 # import used for creating csv file
 import csv

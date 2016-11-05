@@ -1,20 +1,20 @@
 # imports used for drawing DT (Optional)
 import uuid
-import pydot
+#import pydot
 
 # imports for computation
-import Constants
-import DataAnalyser
 
+from DecisionTree.DecisionTree.FeatureBreakDown import  FeatureBreakDown
+from DecisionTree.DecisionTree.WeightedDataAnalyzer import WeightedDataAnalyser
 
-class DecisionTree:
+class WeightedDecisionTree:
     """
     This is class responsible for creating and maintaining decision tree
     """
     __rootNode = -1
     __treeDepth = -1
 
-    def train(self, data, treeDepth):
+    def train(self, data, weights, treeDepth):
         """
         This function train the decision tree model with specified depth on the given data
         :param data: training data
@@ -25,9 +25,10 @@ class DecisionTree:
         availableFeatures = data.getAvailableFeatures()
 
         self.__treeDepth = treeDepth
-        self.__rootNode = self.createNode(data, indices, availableFeatures, 0)
+        self.__rootNode = self.createNode(data, weights, indices, availableFeatures, 0)
 
-    def createNode(self, data, subsetIndices, availableFeatures, nodeDepth, positiveCount=-1, negativeCount=-1):
+    def createNode(self, data, weights, subsetIndices, availableFeatures, nodeDepth,
+                   positiveCount=-1, negativeCount=-1, positiveWeightSum = 0, negativeWeightSum = 0):
         """
         Creates a node in the tree and returns the node object
         :param data: data object
@@ -38,7 +39,7 @@ class DecisionTree:
         :param negativeCount: total negative values in the data
         :return:
         """
-        dataAnalyser = DataAnalyser.DataAnalyser()
+        dataAnalyser = WeightedDataAnalyser()
         # print("\nNode Data--")
         # print("Subset Indices: ", subsetIndices)
         # print("Available Features: ", availableFeatures)
@@ -48,31 +49,41 @@ class DecisionTree:
             # Creating a pure class leaf node and return
             positiveRatio = positiveCount / (positiveCount + negativeCount)
             negativeRatio = negativeCount / (negativeCount + positiveCount)
-            node = Node(-1, positiveRatio, negativeRatio, nodeDepth)
+            node = Node(-1, positiveRatio, negativeRatio, nodeDepth, positiveWeightSum, negativeWeightSum)
             return node
 
         # If node is not pure get the feature breakdown from analyzer
-        featureBreakDown = dataAnalyser.analyseFeatures(data, subsetIndices, availableFeatures)
+        minErrorFeature, featureBreakDownDict = dataAnalyser.analyseFeatures(data, weights, subsetIndices, availableFeatures)
         # print("Feature Breakdown from Analyzer: ")
         # pprint(featureBreakDown)
 
-        feature = list(featureBreakDown.keys())[0]
-        featureValues = list(featureBreakDown.get(feature).keys())
-        featureValues.remove('info-gain')
+        feature = minErrorFeature
+        featureBreakDown = featureBreakDownDict[feature]
+        #feature = featureBreakDownDict[minErrorFeature]
+        #feature = list(featureBreakDown.keys())[0]
+        featureValues = featureBreakDown.featureValues
+        #featureValues.remove('info-gain')
 
         # calculate positive and negative class ratio at the node
         if (positiveCount == -1 or negativeCount == -1):
             negativeCount = 0
             positiveCount = 0
+            negativeWeightSum = 0
+            positiveWeightSum = 0
             for featureValue in featureValues:
-                negativeCount += featureBreakDown.get(feature).get(featureValue)[0]
-                positiveCount += featureBreakDown.get(feature).get(featureValue)[1]
+                negativeCount += featureBreakDown.negativeCount[featureValue]
+                positiveCount += featureBreakDown.positiveCount[featureValue]
+                negativeWeightSum += featureBreakDown.negativeWeights[featureValue]
+                positiveWeightSum += featureBreakDown.postiveWeights[featureValue]
 
         positiveRatio = float(positiveCount) / (positiveCount + negativeCount)
         negativeRatio = float(negativeCount) / (negativeCount + positiveCount)
 
         # Create a new node
-        node = Node(feature, positiveRatio, negativeRatio, nodeDepth)
+        node = Node(feature,
+                    positiveRatio, negativeRatio,
+                    nodeDepth,
+                    positiveWeightSum, negativeWeightSum)
 
         # Create branches and child nodes for each possible value feature can take
         childrenAvailableFeatures = list(availableFeatures)
@@ -81,10 +92,12 @@ class DecisionTree:
         if self.isTerminationCondition(childrenNodeDepth, positiveRatio, childrenAvailableFeatures) == False:
             for featureValue in featureValues:
                 childSubsetIndices = data.getDataIndices(feature, featureValue, subsetIndices)
-                childNode = self.createNode(data, childSubsetIndices,
+                childNode = self.createNode(data, weights, childSubsetIndices,
                                             childrenAvailableFeatures, childrenNodeDepth,
-                                            featureBreakDown.get(feature).get(featureValue)[1],
-                                            featureBreakDown.get(feature).get(featureValue)[0])
+                                            featureBreakDown.positiveCount[featureValue],
+                                            featureBreakDown.negativeCount[featureValue],
+                                            featureBreakDown.postiveWeights[featureValue],
+                                            featureBreakDown.negativeWeights[featureValue])
                 node.addChildren(featureValue, childNode)
 
         return node
@@ -252,7 +265,7 @@ class DecisionTree:
         :return: none
         """
         print('Saving decision tree visualization in dt_plots folder!')
-        self.__graph = pydot.Dot(graph_type='graph')
+        #self.__graph = pydot.Dot(graph_type='graph')
         self.__rootNode.drawNode(graph=self.__graph)
         self.__graph.write_png('dt-plots/' + op_file + '-depth-' + str(self.__treeDepth) + '.png')
 
@@ -267,12 +280,18 @@ class Node:
     __positiveRatio = 0
     __negativeRatio = 0
     __nodeDepth = -1
+    __positiveWeightSum = 0
+    __negativeWeightSum = 0
 
-    def __init__(self, feature, positiveRatio, negativeRatio, nodeDepth):
+
+    def __init__(self, feature, positiveRatio, negativeRatio,
+                 nodeDepth, positiveWeightSum, negativeWeightSum):
         self.__featureIndex = feature
         self.__positiveRatio = positiveRatio
         self.__negativeRatio = negativeRatio
         self.__nodeDepth = nodeDepth
+        self.__positiveWeightSum = positiveWeightSum
+        self.__negativeWeightSum = negativeWeightSum
         self.__children = -1
 
     def addChildren(self, featureValue, childNode):

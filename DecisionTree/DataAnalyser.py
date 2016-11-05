@@ -1,5 +1,5 @@
 import math
-import Constants
+import DecisionTree.DecisionTree.Constants
 from collections import Counter
 
 from pprint import pprint
